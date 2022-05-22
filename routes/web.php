@@ -16,5 +16,6 @@ require __DIR__ . '/auth.php';
 
 Route::get('/projects', [ProjectController::class, 'index']);
 Route::post('/projects', [ProjectController::class, 'store']);
+Route::get('/projects/{project}', [ProjectController::class, 'show']);
 
 // Route::post('/projects', [ProjectController::class, 'store']);

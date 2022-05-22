@@ -27,6 +27,17 @@ class ManageProjectsTest extends TestCase
         $this->get('/projects')->assertSee($attributes['name']);
     }
 
+    public function test_user_can_view_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        $this->get($project->path())
+            ->assertSee($project->name)
+            ->assertSee($project->description);
+    }
+
     public function test_project_requires_name()
     {
         $attributes = Project::factory()->raw(['name' => '']);
