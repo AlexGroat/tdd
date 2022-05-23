@@ -9,10 +9,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'description'
-    ];
+    protected $guarded = [];
 
     public function path()
     {

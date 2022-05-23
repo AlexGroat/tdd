@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Tests\TestCase;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AppModelsProject>
@@ -21,9 +21,9 @@ class ProjectFactory extends Factory
         return [
             'name' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
-            // 'owner_id' => function () {
-            //     return User::factory()->create()->id;
-            // }
+            'owner_id' => function () {
+                return User::factory()->create()->id;
+            }
         ];
     }
 }

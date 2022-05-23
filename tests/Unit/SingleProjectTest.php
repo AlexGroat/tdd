@@ -12,6 +12,8 @@ class SingleProjectTest extends TestCase
 
     public function test_has_path()
     {
+        $this->withoutExceptionHandling();
+
         $project = Project::factory()->create();
 
         $this->assertEquals('/projects/' . $project->id, $project->path());
