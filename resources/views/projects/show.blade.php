@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-<h1>{{ $project->name }}</h1>
+@extends('layouts.app')
+
+@section('content')
+
+<div class="flex items-center justify-between">
+    <h1 class="text-3xl"> {{ $project->name }}</h1>
+
+    <a href="/projects"><button class="mt-2 text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Go Back</button></a>
+</div>
 
 <div>{{ $project->description }}</div>
-
-
-
-</body>
-</html>
+@endsection
