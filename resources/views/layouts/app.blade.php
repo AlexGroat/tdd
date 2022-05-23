@@ -25,7 +25,7 @@
         @include('layouts.navigation')
 
         <!-- Page Content -->
-        <main class="container ml-8 mt-4">
+        <main class="container mx-auto py-4">
             @yield('content')
         </main>
     </div>
