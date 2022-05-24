@@ -22,7 +22,14 @@ class ProjectTasksTest extends TestCase
 
     public function test_owner_can_add_tasks()
     {
-    
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $this->post($project->path() . '/tasks', ['body' => 'test task'])
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('tasks', ['body' => 'test task']);
     }
 
     public function test_project_has_tasks()
