@@ -24,7 +24,7 @@ class ManageProjectsTest extends TestCase
         $this->get($project->path())->assertRedirect('login');
     }
 
-    public function test_a_user_can_create_project()
+    public function test_user_can_create_project()
     {
         $this->withoutExceptionHandling();
 
@@ -34,14 +34,37 @@ class ManageProjectsTest extends TestCase
 
         $attributes = [
             'name' => $this->faker->word(),
-            'description' => $this->faker->paragraph(),
+            'description' => $this->faker->sentence(),
+            'notes' => 'General notes'
         ];
 
-        $this->post('/projects', $attributes);
+        $response  = $this->post('/projects', $attributes);
+
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get('/projects')->assertSee($attributes['name']);
+        $this->get($project->path())
+            ->assertSee($attributes['name'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    public function test_user_can_update_project()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+            'notes' => 'change'
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', ['notes' => 'change']);
     }
 
     public function test_user_can_view_their_project()
@@ -66,6 +89,17 @@ class ManageProjectsTest extends TestCase
         $project = Project::factory()->create();
 
         $this->get($project->path())->assertStatus(403);
+    }
+
+    public function test_auth_user_cannot_update_others_projects()
+    {
+        $this->signIn();
+
+        // $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        $this->patch($project->path(), [])->assertStatus(403);
     }
 
     public function test_project_requires_name()
