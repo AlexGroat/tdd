@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Task;
 use App\Models\Project;
 use App\Models\User;
+use Facades\Tests\Setup\ProjectTestFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -36,11 +37,9 @@ class ProjectTasksTest extends TestCase
     {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectTestFactory::withTasks(1)->create();
 
-        $task = $project->addTask('test task');
-
-        $this->patch($task->path(), ['body' => 'change'])
+        $this->patch($project->tasks[0]->path(), ['body' => 'change'])
             ->assertStatus(403);
 
         $this->assertDatabaseMissing('tasks', ['body' => 'change']);
@@ -48,11 +47,10 @@ class ProjectTasksTest extends TestCase
 
     public function test_project_has_tasks()
     {
-        $this->signIn();
+        $project = ProjectTestFactory::create();
 
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
-
-        $this->post($project->path() . '/tasks', ['body' => 'lorem ipsum']);
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', ['body' => 'lorem ipsum']);
 
         $this->get($project->path())
             ->assertSee('lorem ipsum');
@@ -62,16 +60,13 @@ class ProjectTasksTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->signIn();
+        $project = ProjectTestFactory::withTasks(1)->create();
 
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
-
-        $task = $project->addTask('pickup booklet for work');
-
-        $this->patch($task->path(), [
-            'body' => 'changed',
-            'completed' => true
-        ]);
+        $this->actingAs($project->owner)
+            ->patch($project->tasks[0]->path(), [
+                'body' => 'changed',
+                'completed' => true
+            ]);
 
         $this->assertDatabaseHas('tasks', [
             'body' => 'changed',
@@ -81,12 +76,12 @@ class ProjectTasksTest extends TestCase
 
     public function test_task_requires_body()
     {
-        $this->signIn();
-
         $attributes = Task::factory()->raw(['body' => '']);
 
-        $project = Project::factory()->create(['owner_id' => auth()->id()]);
+        $project = ProjectTestFactory::create();
 
-        $this->post($project->path() . '/tasks', $attributes)->assertSessionHasErrors('body');
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', $attributes)
+            ->assertSessionHasErrors('body');
     }
 }
