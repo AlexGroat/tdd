@@ -38,6 +38,7 @@ class ProjectTaskController extends Controller
         if (auth()->user()->isNot($project->owner)) {
             abort(403);
         }
+        
         request()->validate([
             'body' => 'required'
         ]);
