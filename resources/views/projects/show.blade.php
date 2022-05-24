@@ -13,9 +13,11 @@
             <div class="mb-8">
                 <h1 class="text-lg text-gray-400 mb-3">Tasks</h1>
 
+                @foreach ($project->tasks as $task)
                 <div class="bg-white rounded-3xl p-5 shadow mb-3">
-                    <h3 class="text-xl font-normal mb-3 py-2 -ml-5 border-l-4 border-sky-400 pl-4">Lorem ipsum</h3>
+                    <h3 class="text-xl font-normal mb-3 py-2 -ml-5 border-l-4 border-sky-400 pl-4">{{ $task->body }}</h3>
                 </div>
+                @endforeach
 
             </div>
 
@@ -30,6 +32,9 @@
         <div class="lg:w-1/4 px-3">
             @include ('projects.card')
         </div>
+
+        {{ $project->name }}
+        {{ $project->description }}
     </div>
 </main>
 

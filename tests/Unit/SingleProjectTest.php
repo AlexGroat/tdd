@@ -26,4 +26,16 @@ class SingleProjectTest extends TestCase
 
         $this->assertInstanceOf(User::class, $project->owner);
     }
+
+    public function test_can_add_task()
+    {
+        $this->withoutExceptionHandling();
+
+        $project = Project::factory()->create();
+
+        $task = $project->addTask('lorem ipsum');
+
+        $this->assertCount(1, $project->tasks);
+        $this->assertTrue($project->tasks->contains($task));
+    }
 }
