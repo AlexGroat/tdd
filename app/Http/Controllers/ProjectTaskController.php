@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class ProjectTaskController extends Controller
         if (auth()->user()->isNot($project->owner)) {
             abort(403);
         }
-        
+
         request()->validate([
             'body' => 'required'
         ]);
@@ -77,9 +78,23 @@ class ProjectTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Project $project, Task $task)
     {
-        //
+        if (auth()->user()->isNot($project->owner)) {
+            abort(403);
+        }
+
+        request()->validate([
+            'body' => 'required'
+        ]);
+
+
+        $task->update([
+            'body' => request('body'),
+            'completed' => request()->has('completed')
+        ]);
+
+        return redirect($project->path());
     }
 
     /**
