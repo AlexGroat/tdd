@@ -2,9 +2,10 @@
 
 @section('content')
 <div class="flex items-end justify-between mb-3">
-    <p class="text-xl text-gray-400"><a href="/projects" class="hover:underline hover:text-sky-500"> My Projects</a> / {{ $project->name }}</p>
+    <p class="text-xl text-gray-400"><a href="/projects" class="hover:underline hover:text-sky-500"> My Projects</a> / {{ $project->name }}
+    </p>
 
-    <a href="/projects/create"><button class="mt-2 text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Create Project</button></a>
+    <a href="{{ $project->path() . '/edit' }}"><button class="ml-4 text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-2 text-center">Edit Project</button></a>
 </div>
 
 <div class="mb-8">

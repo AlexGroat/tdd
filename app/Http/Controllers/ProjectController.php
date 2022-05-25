@@ -71,7 +71,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return view('projects.edit', compact('project'));
     }
 
     /**
@@ -85,13 +85,13 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
 
-        // if (auth()->user()->isNot($project->owner)) {
-        //     abort(403);
-        // }
-
-        $project->update([
-            'notes' => request('notes')
+        $attributes = request()->validate([
+            'name' => 'required',
+            'description' => 'required|max:100',
+            'notes' => 'max:255'
         ]);
+
+        $project->update($attributes);
 
         return redirect($project->path());
     }
@@ -106,4 +106,5 @@ class ProjectController extends Controller
     {
         //
     }
+    
 }

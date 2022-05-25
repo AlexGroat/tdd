@@ -18,11 +18,10 @@ class ManageProjectsTest extends TestCase
         $project = Project::factory()->create();
 
         $this->post('/projects', $project->toArray())->assertRedirect('login');
-
         $this->get('/projects')->assertRedirect('login');
         $this->get('/projects/create')->assertRedirect('login');
-
         $this->get($project->path())->assertRedirect('login');
+        $this->get($project->path() . '/edit')->assertRedirect('login');
     }
 
     public function test_user_can_create_project()
@@ -58,8 +57,12 @@ class ManageProjectsTest extends TestCase
         $project = ProjectTestFactory::create();
 
         $this->actingAs($project->owner)->patch($project->path(), $attributes = [
+            'name' => 'change',
+            'description' => 'change',
             'notes' => 'change'
         ])->assertRedirect($project->path());
+
+        $this->get($project->path() . '/edit')->assertStatus(200);
 
         $this->assertDatabaseHas('projects', $attributes);
     }

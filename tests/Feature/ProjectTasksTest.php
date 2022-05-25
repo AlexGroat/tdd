@@ -26,7 +26,7 @@ class ProjectTasksTest extends TestCase
         $this->signIn();
 
         $project = Project::factory()->create();
-
+        
         $this->post($project->path() . '/tasks', ['body' => 'test task'])
             ->assertStatus(403);
 
